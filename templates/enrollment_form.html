@@ -1,0 +1,318 @@
+{% extends 'base.html' %}
+
+{% block title %}Apply for {{ course.title }} - Maradha Institute{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('home') }}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('course_detail', course_id=course.id) }}">{{ course.title }}</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Apply Now</li>
+                </ol>
+            </nav>
+            
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-header bg-primary text-white py-3">
+                    <h3 class="mb-0 fw-medium">Enrollment Form: {{ course.title }}</h3>
+                </div>
+                <div class="card-body p-4">
+                    <div class="alert alert-info" role="alert">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <span class="small">Please fill out all the required fields to complete your application.</span>
+                    </div>
+                    
+                    <form method="post" enctype="multipart/form-data" class="enrollment-form mt-4" novalidate>
+                        {{ form.hidden_tag() }}
+                        
+                        <h5 class="form-section-title mb-3">Personal Information</h5>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-12">
+                                <label for="{{ form.full_name.id }}" class="form-label">Full Name <span class="text-danger">*</span></label>
+                                {{ form.full_name(class="form-control" + (" is-invalid" if form.full_name.errors else ""), placeholder="Enter your full name") }}
+                                {% if form.full_name.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.full_name.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="{{ form.father_name.id }}" class="form-label">Father's Name <span class="text-danger">*</span></label>
+                                {{ form.father_name(class="form-control" + (" is-invalid" if form.father_name.errors else ""), placeholder="Enter your father's name") }}
+                                {% if form.father_name.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.father_name.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="{{ form.mother_name.id }}" class="form-label">Mother's Name <span class="text-danger">*</span></label>
+                                {{ form.mother_name(class="form-control" + (" is-invalid" if form.mother_name.errors else ""), placeholder="Enter your mother's name") }}
+                                {% if form.mother_name.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.mother_name.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <h5 class="form-section-title mb-3">Contact Information</h5>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label for="{{ form.phone_number.id }}" class="form-label">Phone Number <span class="text-danger">*</span></label>
+                                {{ form.phone_number(class="form-control" + (" is-invalid" if form.phone_number.errors else ""), placeholder="Enter 10-digit phone number") }}
+                                {% if form.phone_number.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.phone_number.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="{{ form.whatsapp_number.id }}" class="form-label">WhatsApp Number <span class="text-danger">*</span></label>
+                                {{ form.whatsapp_number(class="form-control" + (" is-invalid" if form.whatsapp_number.errors else ""), placeholder="Enter WhatsApp number") }}
+                                {% if form.whatsapp_number.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.whatsapp_number.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-12">
+                                <label for="{{ form.email.id }}" class="form-label">Email ID (Optional)</label>
+                                {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else ""), placeholder="Enter your email address (if available)") }}
+                                {% if form.email.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.email.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                                <div class="form-text">If you don't have an email address, you can leave this field blank.</div>
+                            </div>
+                        </div>
+                        
+                        <h5 class="form-section-title mb-3">Address Information</h5>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-12">
+                                <label for="{{ form.address.id }}" class="form-label">Full Address <span class="text-danger">*</span></label>
+                                {{ form.address(class="form-control" + (" is-invalid" if form.address.errors else ""), placeholder="Enter your complete address", rows=3) }}
+                                {% if form.address.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.address.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="{{ form.village_town.id }}" class="form-label">Village/Town <span class="text-danger">*</span></label>
+                                {{ form.village_town(class="form-control" + (" is-invalid" if form.village_town.errors else ""), placeholder="Enter your village or town name") }}
+                                {% if form.village_town.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.village_town.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="{{ form.district.id }}" class="form-label">District <span class="text-danger">*</span></label>
+                                {{ form.district(class="form-control" + (" is-invalid" if form.district.errors else ""), placeholder="Enter your district") }}
+                                {% if form.district.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.district.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="{{ form.state.id }}" class="form-label">State <span class="text-danger">*</span></label>
+                                {{ form.state(class="form-control" + (" is-invalid" if form.state.errors else ""), placeholder="Enter your state") }}
+                                {% if form.state.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.state.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="{{ form.pin_code.id }}" class="form-label">Pin Code <span class="text-danger">*</span></label>
+                                {{ form.pin_code(class="form-control" + (" is-invalid" if form.pin_code.errors else ""), placeholder="Enter 6-digit pin code") }}
+                                {% if form.pin_code.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.pin_code.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <h5 class="form-section-title mb-3">Education & Course Information</h5>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-12">
+                                <label for="{{ form.education_status.id }}" class="form-label">Current Class / Pass-out Status <span class="text-danger">*</span></label>
+                                {{ form.education_status(class="form-control" + (" is-invalid" if form.education_status.errors else ""), placeholder="e.g., 10th Pass, 12th Studying, etc.") }}
+                                {% if form.education_status.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.education_status.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-12">
+                                <label for="{{ form.why_learn.id }}" class="form-label">Why You Want to Learn <span class="text-danger">*</span></label>
+                                {{ form.why_learn(class="form-control" + (" is-invalid" if form.why_learn.errors else ""), placeholder="Tell us why you want to join this course...", rows=4) }}
+                                {% if form.why_learn.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.why_learn.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-12">
+                                <label for="{{ form.id_photo.id }}" class="form-label">Upload Student ID or Photo (Optional)</label>
+                                {{ form.id_photo(class="form-control" + (" is-invalid" if form.id_photo.errors else "")) }}
+                                {% if form.id_photo.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.id_photo.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                                <div class="form-text">Accepted file types: JPG, JPEG, PNG, PDF (Max size: 5MB)</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" type="checkbox" value="" id="termsCheck" required>
+                            <label class="form-check-label" for="termsCheck">
+                                I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Terms and Conditions</a>
+                            </label>
+                            <div class="invalid-feedback">
+                                You must agree before submitting.
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid">
+                            {{ form.submit(class="btn btn-primary btn-lg") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Terms and Conditions Modal -->
+<div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="termsModalLabel">Terms and Conditions</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h6>Enrollment Terms:</h6>
+                <p>By submitting this application, you agree to the following terms:</p>
+                <ul>
+                    <li>Course fees are to be paid before the start of the course.</li>
+                    <li>Regular attendance and participation in classes are mandatory.</li>
+                    <li>All course materials provided are for personal use only and should not be shared with others.</li>
+                    <li>Maradha Institute reserves the right to modify the course content or schedule if necessary.</li>
+                    <li>Students are expected to maintain a respectful learning environment.</li>
+                </ul>
+                
+                <h6>Privacy Policy:</h6>
+                <p>We respect your privacy and will use your information only for:</p>
+                <ul>
+                    <li>Course enrollment and communication</li>
+                    <li>Sending important updates related to your course</li>
+                    <li>Providing certificates upon course completion</li>
+                    <li>We will not share your personal information with third parties without your consent.</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">I Understand</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Form validation
+    document.addEventListener('DOMContentLoaded', function() {
+        // Custom validation for terms checkbox
+        const termsCheck = document.getElementById('termsCheck');
+        const enrollmentForm = document.querySelector('.enrollment-form');
+        
+        enrollmentForm.addEventListener('submit', function(event) {
+            if (!termsCheck.checked) {
+                termsCheck.nextElementSibling.nextElementSibling.style.display = 'block';
+                event.preventDefault();
+                event.stopPropagation();
+            } else {
+                termsCheck.nextElementSibling.nextElementSibling.style.display = 'none';
+            }
+        });
+        
+        // Copy phone number to WhatsApp number if both are the same
+        const phoneInput = document.getElementById('{{ form.phone_number.id }}');
+        const whatsappInput = document.getElementById('{{ form.whatsapp_number.id }}');
+        
+        phoneInput.addEventListener('input', function() {
+            if (document.getElementById('sameAsPhoneCheck')?.checked) {
+                whatsappInput.value = phoneInput.value;
+            }
+        });
+        
+        // Add "Same as Phone Number" checkbox for convenience
+        const sameAsPhoneCheckHTML = `
+            <div class="form-check mt-2">
+                <input class="form-check-input" type="checkbox" id="sameAsPhoneCheck">
+                <label class="form-check-label" for="sameAsPhoneCheck">
+                    Same as Phone Number
+                </label>
+            </div>
+        `;
+        
+        whatsappInput.parentElement.insertAdjacentHTML('beforeend', sameAsPhoneCheckHTML);
+        
+        document.getElementById('sameAsPhoneCheck').addEventListener('change', function() {
+            if (this.checked) {
+                whatsappInput.value = phoneInput.value;
+                whatsappInput.setAttribute('readonly', true);
+            } else {
+                whatsappInput.removeAttribute('readonly');
+            }
+        });
+    });
+</script>
+{% endblock %}

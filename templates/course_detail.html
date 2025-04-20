@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ course.title }} - Maradha Institute{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Course Information -->
+        <div class="col-lg-8">
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('home') }}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('home') }}#courses">Courses</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ course.title }}</li>
+                </ol>
+            </nav>
+            
+            <div class="course-header mb-4">
+                <h1 class="fw-bold mb-3">{{ course.title }}</h1>
+                <div class="d-flex flex-wrap gap-3 mb-4">
+                    <div class="course-meta">
+                        <i class="far fa-calendar-alt text-primary me-2"></i>
+                        <span class="text-muted">Start Date:</span>
+                        <span class="fw-medium">{{ course.start_date.strftime('%d %b, %Y') }}</span>
+                    </div>
+                    <div class="course-meta">
+                        <i class="far fa-calendar-check text-primary me-2"></i>
+                        <span class="text-muted">End Date:</span>
+                        <span class="fw-medium">{{ course.end_date.strftime('%d %b, %Y') }}</span>
+                    </div>
+                    <div class="course-meta">
+                        <i class="far fa-clock text-primary me-2"></i>
+                        <span class="text-muted">Duration:</span>
+                        <span class="fw-medium">{{ (course.end_date - course.start_date).days }} Days</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Course Banner -->
+            {% if course.image_url %}
+            <div class="course-banner mb-4 rounded overflow-hidden">
+                <img src="{{ course.image_url }}" alt="{{ course.title }}" class="img-fluid w-100">
+            </div>
+            {% else %}
+            <div class="course-banner mb-4 rounded overflow-hidden bg-light d-flex align-items-center justify-content-center py-5">
+                <i class="fas fa-laptop-code text-primary" style="font-size: 5rem;"></i>
+            </div>
+            {% endif %}
+            
+            <!-- Course Description -->
+            <div class="course-section mb-5">
+                <h3 class="section-title fw-bold mb-3">Course Description</h3>
+                <div class="course-description">
+                    <p>{{ course.description | nl2br }}</p>
+                </div>
+            </div>
+            
+            <!-- Course Benefits -->
+            <div class="course-section mb-5">
+                <h3 class="section-title fw-bold mb-3">What You'll Learn</h3>
+                <div class="course-benefits">
+                    <ul class="list-group list-group-flush">
+                        {% for benefit in course.benefits.split('\n') if benefit.strip() %}
+                        <li class="list-group-item bg-transparent ps-0">
+                            <i class="fas fa-check-circle text-success me-2"></i> {{ benefit.strip() }}
+                        </li>
+                        {% else %}
+                        <li class="list-group-item bg-transparent ps-0">
+                            <i class="fas fa-info-circle text-primary me-2"></i> Comprehensive curriculum designed for beginners
+                        </li>
+                        <li class="list-group-item bg-transparent ps-0">
+                            <i class="fas fa-info-circle text-primary me-2"></i> Practical skills that employers are looking for
+                        </li>
+                        <li class="list-group-item bg-transparent ps-0">
+                            <i class="fas fa-info-circle text-primary me-2"></i> Small batch size for personalized attention
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Course Timeline -->
+            <div class="course-section mb-5">
+                <h3 class="section-title fw-bold mb-3">Course Timeline</h3>
+                <div class="course-timeline">
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <h5>Enrollment Phase</h5>
+                                <p>Complete your application and secure your seat</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <h5>Course Start</h5>
+                                <p>{{ course.start_date.strftime('%d %B, %Y') }}</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <h5>Learning Phase</h5>
+                                <p>Hands-on projects and interactive sessions</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <h5>Course Completion</h5>
+                                <p>{{ course.end_date.strftime('%d %B, %Y') }}</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <h5>Certification</h5>
+                                <p>Receive your completion certificate</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Course Sidebar -->
+        <div class="col-lg-4">
+            <div class="course-sidebar sticky-lg-top" style="top: 80px;">
+                <div class="card shadow-sm border-0 rounded-3 mb-4">
+                    <div class="card-body p-4">
+                        <div class="price-box mb-4">
+                            <h5 class="text-muted mb-2">Course Fee</h5>
+                            <div class="d-flex align-items-center">
+                                <span class="text-decoration-line-through text-muted me-2">₹{{ course.price }}</span>
+                                <h3 class="fw-bold text-primary mb-0">₹{{ course.offer_price }}</h3>
+                                <span class="badge bg-danger ms-2">
+                                    {{ ((course.price - course.offer_price) / course.price * 100) | round | int }}% OFF
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="enrollment-cta mb-4">
+                            <a href="{{ url_for('enrollment_form', course_id=course.id) }}" class="btn btn-primary btn-lg w-100 fw-medium">
+                                Apply Now <i class="fas fa-arrow-right ms-2"></i>
+                            </a>
+                        </div>
+                        
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item border-0 ps-0 d-flex">
+                                <i class="fas fa-users text-primary me-3 mt-1"></i>
+                                <div>
+                                    <h6 class="mb-0">Limited Seats</h6>
+                                    <small class="text-muted">Only 20 students per batch</small>
+                                </div>
+                            </li>
+                            <li class="list-group-item border-0 ps-0 d-flex">
+                                <i class="fas fa-chalkboard-teacher text-primary me-3 mt-1"></i>
+                                <div>
+                                    <h6 class="mb-0">Expert Instructors</h6>
+                                    <small class="text-muted">Learn from industry professionals</small>
+                                </div>
+                            </li>
+                            <li class="list-group-item border-0 ps-0 d-flex">
+                                <i class="fas fa-certificate text-primary me-3 mt-1"></i>
+                                <div>
+                                    <h6 class="mb-0">Certification</h6>
+                                    <small class="text-muted">Receive a completion certificate</small>
+                                </div>
+                            </li>
+                            <li class="list-group-item border-0 ps-0 d-flex">
+                                <i class="fas fa-laptop-house text-primary me-3 mt-1"></i>
+                                <div>
+                                    <h6 class="mb-0">Lab Access</h6>
+                                    <small class="text-muted">Practice in our computer lab</small>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card shadow-sm border-0 rounded-3">
+                    <div class="card-body p-4">
+                        <h5 class="card-title mb-3">Have a Question?</h5>
+                        <p class="card-text small text-muted mb-3">Contact us for more information about this course.</p>
+                        <div class="contact-info">
+                            <div class="mb-2 d-flex">
+                                <i class="fas fa-phone-alt text-primary me-2 mt-1"></i>
+                                <span>+91 9876543210</span>
+                            </div>
+                            <div class="mb-2 d-flex">
+                                <i class="fas fa-envelope text-primary me-2 mt-1"></i>
+                                <span>info@maradha.institute</span>
+                            </div>
+                            <div class="mb-2 d-flex">
+                                <i class="fab fa-whatsapp text-primary me-2 mt-1"></i>
+                                <span>WhatsApp: +91 9876543210</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

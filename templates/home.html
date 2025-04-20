@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Success Message Modal (initially hidden) -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="successModalLabel">Application Submitted!</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center mb-3">
+          <i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>
+        </div>
+        <p class="text-center">Your application has been submitted successfully! We will contact you soon with further details.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Great!</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Hero Section with Parallax -->
+<section class="hero-section position-relative">
+    <div class="hero-image-container">
+        <div class="parallax-bg"></div>
+    </div>
+    <div class="container hero-content">
+        <div class="row min-vh-80 align-items-center">
+            <div class="col-lg-8 col-md-10 mx-auto text-center">
+                <h1 class="display-4 fw-bold text-white mb-4 text-shadow">
+                    <span class="typed-text"></span>
+                </h1>
+                <p class="lead text-white mb-4 text-shadow">
+                    Learn to Build Websites Like YouTube, Facebook, Instagram – Right from Your Village!
+                </p>
+                <a href="#courses" class="btn btn-primary btn-lg px-4 py-2 animate-bounce">
+                    Explore Courses <i class="fas fa-arrow-down ms-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Courses Section -->
+<section id="courses" class="py-5">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-md-12 text-center">
+                <h2 class="fw-bold position-relative d-inline-block">
+                    <span class="position-relative z-2">Current Running Courses</span>
+                    <span class="title-highlight"></span>
+                </h2>
+                <p class="text-muted">Enroll in our specially designed courses for 10th Pass students</p>
+            </div>
+        </div>
+        <div class="row">
+            {% if courses %}
+                {% for course in courses %}
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 course-card shadow-sm">
+                        {% if course.image_url %}
+                        <img src="{{ course.image_url }}" class="card-img-top" alt="{{ course.title }}">
+                        {% else %}
+                        <div class="card-img-placeholder bg-light d-flex align-items-center justify-content-center p-4">
+                            <i class="fas fa-laptop-code text-primary" style="font-size: 5rem;"></i>
+                        </div>
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">{{ course.title }}</h5>
+                            <div class="card-text small mb-3">
+                                <div class="d-flex justify-content-between text-muted mb-2">
+                                    <span><i class="far fa-calendar-alt me-1"></i> Starts: {{ course.start_date.strftime('%d %b, %Y') }}</span>
+                                    <span><i class="far fa-calendar-check me-1"></i> Ends: {{ course.end_date.strftime('%d %b, %Y') }}</span>
+                                </div>
+                                <div class="course-price mb-3">
+                                    <span class="text-decoration-line-through text-muted me-2">₹{{ course.price }}</span>
+                                    <span class="fw-bold text-primary">₹{{ course.offer_price }}</span>
+                                    <span class="badge bg-danger ms-2">
+                                        {{ ((course.price - course.offer_price) / course.price * 100) | round | int }}% OFF
+                                    </span>
+                                </div>
+                                <p class="text-truncate-3">{{ course.description }}</p>
+                            </div>
+                            <a href="{{ url_for('course_detail', course_id=course.id) }}" class="btn btn-primary w-100">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12 text-center py-5">
+                    <div class="empty-state">
+                        <i class="fas fa-book-open empty-icon mb-3"></i>
+                        <h4>No courses available yet</h4>
+                        <p class="text-muted">New courses will be added soon. Please check back later.</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Benefits Section -->
+<section id="benefits" class="py-5 bg-light">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-md-12 text-center">
+                <h2 class="fw-bold position-relative d-inline-block">
+                    <span class="position-relative z-2">Why Choose Maradha Institute?</span>
+                    <span class="title-highlight"></span>
+                </h2>
+                <p class="text-muted">We provide more than just education - we provide a career pathway</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card h-100 border-0 shadow-sm benefit-card">
+                    <div class="card-body text-center p-4">
+                        <div class="benefit-icon mb-3">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <h5 class="card-title">1-on-1 Support</h5>
+                        <p class="card-text small text-muted">Personalized guidance from experienced mentors to help you master the skills.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card h-100 border-0 shadow-sm benefit-card">
+                    <div class="card-body text-center p-4">
+                        <div class="benefit-icon mb-3">
+                            <i class="fas fa-laptop-code"></i>
+                        </div>
+                        <h5 class="card-title">Hands-on Projects</h5>
+                        <p class="card-text small text-muted">Build real-world applications that you can showcase in your portfolio.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card h-100 border-0 shadow-sm benefit-card">
+                    <div class="card-body text-center p-4">
+                        <div class="benefit-icon mb-3">
+                            <i class="fas fa-rupee-sign"></i>
+                        </div>
+                        <h5 class="card-title">Earn After Learning</h5>
+                        <p class="card-text small text-muted">Get job placement assistance or freelance opportunities after completing the course.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card h-100 border-0 shadow-sm benefit-card">
+                    <div class="card-body text-center p-4">
+                        <div class="benefit-icon mb-3">
+                            <i class="fas fa-certificate"></i>
+                        </div>
+                        <h5 class="card-title">Free Certificate</h5>
+                        <p class="card-text small text-muted">Receive a recognized certificate upon course completion to boost your resume.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8 mb-4 mb-lg-0">
+                <h3 class="fw-bold">Only for 10th Pass Students – Limited Seats!</h3>
+                <p class="mb-0">Don't miss this opportunity to build a career in technology. Apply now before seats fill up!</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a href="#courses" class="btn btn-light btn-lg">Apply Now <i class="fas fa-arrow-right ms-2"></i></a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Typed.js for Hero Text Animation -->
+<script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check if there's a success parameter in the URL (from enrollment)
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('enrollment_success')) {
+            // Store success flag in localStorage for persistent feedback
+            localStorage.setItem('enrollmentSuccess', 'true');
+            
+            // Show success modal
+            const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+            successModal.show();
+            
+            // Clean the URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+        
+        // Check localStorage on page load
+        if (localStorage.getItem('enrollmentSuccess') === 'true') {
+            // Show success modal
+            const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+            successModal.show();
+            
+            // Clear the flag after showing
+            localStorage.removeItem('enrollmentSuccess');
+        }
+        
+        // Typing animation for hero text
+        const typedTextElement = document.querySelector('.typed-text');
+        if (typedTextElement) {
+            const typed = new Typed(typedTextElement, {
+                strings: [
+                    'Transform Your Future with Tech Skills',
+                    'Learn Website Development',
+                    'Master Modern Programming',
+                    'Build Your Career in IT'
+                ],
+                typeSpeed: 50,
+                backSpeed: 30,
+                backDelay: 2000,
+                loop: true
+            });
+        }
+        
+        // Parallax effect for hero section
+        const parallaxBg = document.querySelector('.parallax-bg');
+        if (parallaxBg) {
+            window.addEventListener('scroll', function() {
+                const scrollPosition = window.pageYOffset;
+                parallaxBg.style.transform = `translateY(${scrollPosition * 0.5}px)`;
+            });
+        }
+    });
+</script>
+{% endblock %}
