@@ -50,10 +50,8 @@
                             <img src="{{ url_for('static', filename=student.photo_path) }}" 
                                  class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
                             {% else %}
-                            <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto"
-                                 style="width: 150px; height: 150px;">
-                                <i class="fas fa-user text-white" style="font-size: 4rem;"></i>
-                            </div>
+                            <img src="{{ url_for('static', filename='img/avatar.png') }}" 
+                                 class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
                             {% endif %}
                         </div>
                         <h5 class="card-title mb-1">{{ student.student_name }}</h5>
@@ -231,25 +229,25 @@
         if (urlParams.has('enrollment_success')) {
             // Store success flag in localStorage for persistent feedback
             localStorage.setItem('enrollmentSuccess', 'true');
-            
+
             // Show success modal
             const successModal = new bootstrap.Modal(document.getElementById('successModal'));
             successModal.show();
-            
+
             // Clean the URL
             window.history.replaceState({}, document.title, window.location.pathname);
         }
-        
+
         // Check localStorage on page load
         if (localStorage.getItem('enrollmentSuccess') === 'true') {
             // Show success modal
             const successModal = new bootstrap.Modal(document.getElementById('successModal'));
             successModal.show();
-            
+
             // Clear the flag after showing
             localStorage.removeItem('enrollmentSuccess');
         }
-        
+
         // Typing animation for hero text
         const typedTextElement = document.querySelector('.typed-text');
         if (typedTextElement) {
@@ -266,7 +264,7 @@
                 loop: true
             });
         }
-        
+
         // Parallax effect for hero section
         const parallaxBg = document.querySelector('.parallax-bg');
         if (parallaxBg) {

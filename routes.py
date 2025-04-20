@@ -7,7 +7,7 @@ from werkzeug.utils import secure_filename
 from flask_login import login_user, logout_user, login_required, current_user
 
 from app import app, db
-from models import Admin, Student, Course, Enrollment, Notification
+from models import Admin, Student, Course, Enrollment, Notification, TopStudent
 from forms import AdminLoginForm, StudentLoginForm, StudentRegistrationForm, CourseForm, EnrollmentForm, AdminStudentUploadForm
 
 # Home page

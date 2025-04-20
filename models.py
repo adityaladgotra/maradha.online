@@ -93,9 +93,6 @@ class TopStudent(db.Model):
     photo_path = db.Column(db.String(256), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
