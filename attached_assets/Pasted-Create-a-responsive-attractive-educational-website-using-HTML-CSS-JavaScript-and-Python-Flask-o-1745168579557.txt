@@ -1,0 +1,66 @@
+Create a responsive, attractive educational website using HTML, CSS, JavaScript, and Python Flask (or Node.js if preferred) for a local learning initiative called "Maradha Institute".
+
+The website must have the following features:
+
+📌 HOME PAGE:
+- Eye-catching modern hero section with an inspirational slogan like: “Learn to Build Websites Like YouTube, Facebook, Instagram – Right from Your Village!”
+- Display all **Current Running Courses** with title, duration, start date, end date, fees (with offer), and "Apply Now" button.
+- Highlight student benefits: "1-on-1 Support", "Hands-on Projects", "Earn After Learning", "Free Certificate", etc.
+- Motivational call-to-action: “Only for 10th Pass Students – Limited Seats!”
+
+📌 STUDENT ENROLLMENT FORM (triggered after clicking Apply Now):
+- Full Name
+- Father's Name
+- Mother's Name
+- Phone Number
+- WhatsApp Number
+- Email ID (optional)
+- Full Address
+- Village/Town
+- District
+- State
+- Pin Code
+- Current Class / Pass-out Status
+- Preferred Course
+- Why You Want to Learn (Short Answer)
+- File Upload (optional) for Student ID or Photo
+
+✅ Form data should be saved in a backend database (SQLite or JSON for simplicity).
+
+📌 ADMIN DASHBOARD (credentials: username = maradha.online, password = Maradha@123):
+- Admin can:
+  - Add new courses with:
+    - Title
+    - Description
+    - Start Date, End Date
+    - Price, Offer Price
+    - Course Image (URL or upload)
+    - Benefits (bullet points)
+  - View all student enrollments.
+  - Filter applications by course name.
+  - Delete or edit any course.
+
+📌 COURSE DETAILS PAGE:
+- When a user clicks on a course from the home page, show:
+  - Course Description
+  - Benefits
+  - Timeline
+  - Course Image or Banner
+  - "Apply Now" CTA
+
+📌 EXTRA ENHANCEMENTS:
+- Mobile-Responsive Design using TailwindCSS or Bootstrap
+- Add animation (like typing animation or parallax scrolling on homepage)
+- Use FontAwesome icons for visual enhancement
+- Simple backend authentication for admin login
+- Use localStorage to show “You have successfully applied!” message on form submit
+- Confirmation email (optional, if using SMTP or Replit DB Mail Extension)
+
+📌 FOLDER STRUCTURE:
+- `/templates`: All HTML files (home.html, login.html, dashboard.html, course_detail.html)
+- `/static`: CSS, JS, images
+- `app.py` or `server.js`: Flask or Node backend
+- `students.db` or `courses.json`: Data storage
+
+Give clean, well-commented code and make it beginner-friendly to understand and expand.
+
