@@ -1,9 +1,9 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, TextAreaField, PasswordField, DateField, FloatField, SelectField, SubmitField, BooleanField
+from wtforms import StringField, TextAreaField, PasswordField, DateField, FloatField, SelectField, SubmitField, BooleanField, IntegerField
 from wtforms.validators import DataRequired, Email, Optional, Length, ValidationError, EqualTo
 import re
-from models import Student
+from models import Student, Course
 
 class AdminLoginForm(FlaskForm):
     username = StringField('Admin Username', validators=[DataRequired()])
@@ -91,3 +91,36 @@ class EnrollmentForm(FlaskForm):
     def validate_pin_code(self, field):
         if not re.match(r'^\d{6,10}$', field.data):
             raise ValidationError('Pin code must be 6-10 digits')
+
+class AdminStudentUploadForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired(), Length(min=4, max=64)])
+    full_name = StringField('Full Name', validators=[DataRequired(), Length(max=100)])
+    email = StringField('Email', validators=[DataRequired(), Email(), Length(max=120)])
+    phone_number = StringField('Phone Number', validators=[DataRequired(), Length(min=10, max=15)])
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=8)])
+    course_id = SelectField('Course', coerce=int, validators=[DataRequired()])
+    student_photo = FileField('Student Photo', validators=[
+        Optional(),
+        FileAllowed(['jpg', 'jpeg', 'png'], 'Only images (jpg, jpeg, png) are allowed!')
+    ])
+    submit = SubmitField('Add Student')
+    
+    def __init__(self, *args, **kwargs):
+        super(AdminStudentUploadForm, self).__init__(*args, **kwargs)
+        # Populate the courses dropdown dynamically
+        self.course_id.choices = [(course.id, course.title) 
+                                  for course in Course.query.order_by(Course.title).all()]
+    
+    def validate_username(self, username):
+        student = Student.query.filter_by(username=username.data).first()
+        if student:
+            raise ValidationError('That username is already taken. Please choose a different one.')
+            
+    def validate_email(self, email):
+        student = Student.query.filter_by(email=email.data).first()
+        if student:
+            raise ValidationError('That email is already registered. Please use a different one.')
+            
+    def validate_phone_number(self, field):
+        if not re.match(r'^\d{10,15}$', field.data):
+            raise ValidationError('Phone number must be 10-15 digits')
