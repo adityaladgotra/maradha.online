@@ -1,8 +1,8 @@
 import os
 import logging
+from extensions import db
 
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
 from werkzeug.middleware.proxy_fix import ProxyFix
 from flask_login import LoginManager
@@ -14,7 +14,7 @@ class Base(DeclarativeBase):
     pass
 
 # Initialize SQLAlchemy with custom base
-db = SQLAlchemy(model_class=Base)
+
 
 # Create Flask app
 app = Flask(__name__)
