@@ -90,6 +90,7 @@ class TopStudent(db.Model):
     course_name = db.Column(db.String(100), nullable=False)
     rank = db.Column(db.Integer, nullable=False)
     photo_path = db.Column(db.String(256), nullable=True)
+    is_listed = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Notification(db.Model):

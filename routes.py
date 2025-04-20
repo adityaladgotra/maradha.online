@@ -14,7 +14,7 @@ from forms import AdminLoginForm, StudentLoginForm, StudentRegistrationForm, Cou
 @app.route('/')
 def home():
     courses = Course.query.order_by(Course.created_at.desc()).all()
-    top_students = TopStudent.query.order_by(TopStudent.rank).limit(3).all()
+    top_students = TopStudent.query.filter_by(is_listed=True).order_by(TopStudent.rank).limit(3).all()
     return render_template('home.html', courses=courses, top_students=top_students)
 
 # Course detail page
@@ -406,6 +406,19 @@ def add_top_student():
         return redirect(url_for('admin_dashboard'))
 
     return render_template('admin_add_top_student.html')
+
+@app.route('/admin/top-students/toggle/<int:student_id>', methods=['POST'])
+@login_required
+def toggle_top_student_listing(student_id):
+    if not isinstance(current_user, Admin):
+        return redirect(url_for('home'))
+
+    top_student = TopStudent.query.get_or_404(student_id)
+    top_student.is_listed = not top_student.is_listed
+    db.session.commit()
+
+    flash(f'Student {"listed" if top_student.is_listed else "unlisted"} successfully!', 'success')
+    return redirect(url_for('admin_dashboard'))
 
 @app.route('/admin/top-students/delete/<int:student_id>', methods=['POST'])
 @login_required
