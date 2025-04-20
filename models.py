@@ -83,6 +83,17 @@ class Enrollment(db.Model):
     student_id = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=True)
     
     # Timestamp
+
+
+class TopStudent(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    student_name = db.Column(db.String(100), nullable=False)
+    course_name = db.Column(db.String(100), nullable=False)
+    rank = db.Column(db.Integer, nullable=False)
+    photo_path = db.Column(db.String(256), nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Notification(db.Model):

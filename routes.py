@@ -14,7 +14,8 @@ from forms import AdminLoginForm, StudentLoginForm, StudentRegistrationForm, Cou
 @app.route('/')
 def home():
     courses = Course.query.order_by(Course.created_at.desc()).all()
-    return render_template('home.html', courses=courses)
+    top_students = TopStudent.query.order_by(TopStudent.rank).limit(3).all()
+    return render_template('home.html', courses=courses, top_students=top_students)
 
 # Course detail page
 @app.route('/course/<int:course_id>')
@@ -372,3 +373,37 @@ def page_not_found(e):
 @app.errorhandler(500)
 def internal_server_error(e):
     return render_template('500.html'), 500
+
+
+
+@app.route('/admin/top-students/add', methods=['GET', 'POST'])
+@login_required
+def add_top_student():
+    if not isinstance(current_user, Admin):
+        return redirect(url_for('home'))
+        
+    if request.method == 'POST':
+        photo = request.files.get('photo')
+        photo_path = None
+        
+        if photo:
+            filename = secure_filename(f"top_student_{int(datetime.now().timestamp())}.jpg")
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            photo.save(filepath)
+            photo_path = os.path.join('uploads', filename)
+            
+        top_student = TopStudent(
+            student_name=request.form.get('student_name'),
+            course_name=request.form.get('course_name'),
+            rank=request.form.get('rank', type=int),
+            photo_path=photo_path
+        )
+        
+        db.session.add(top_student)
+        db.session.commit()
+        
+        flash('Top student added successfully!', 'success')
+        return redirect(url_for('admin_dashboard'))
+        
+    return render_template('admin_add_top_student.html')
+
