@@ -1,3 +1,4 @@
+
 from app import db
 from flask_login import UserMixin
 from datetime import datetime
@@ -26,10 +27,7 @@ class Student(UserMixin, db.Model):
     password_hash = db.Column(db.String(256), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
-    # Define the relationship with enrollments
     enrollments = db.relationship('Enrollment', backref='student', lazy=True)
-    
-    # Define the relationship with notifications
     notifications = db.relationship('Notification', backref='student', lazy=True, cascade="all, delete-orphan")
     
     def set_password(self, password):
@@ -54,10 +52,7 @@ class Course(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
-    # Relationship with enrollments
     enrollments = db.relationship('Enrollment', backref='course', lazy=True, cascade="all, delete-orphan")
-    
-    # Define the relationship with notifications
     notifications = db.relationship('Notification', backref='course', lazy=True)
 
 class Enrollment(db.Model):
@@ -77,12 +72,9 @@ class Enrollment(db.Model):
     why_learn = db.Column(db.Text, nullable=False)
     id_photo_path = db.Column(db.String(256), nullable=True)
     
-    # Foreign key to Course
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
-    # Foreign key to Student (optional, as not all enrollments will have a student account)
     student_id = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
 
 class TopStudent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -90,7 +82,7 @@ class TopStudent(db.Model):
     course_name = db.Column(db.String(100), nullable=False)
     rank = db.Column(db.Integer, nullable=False)
     photo_path = db.Column(db.String(256), nullable=True)
-    is_listed = db.Column(db.Boolean, default=True)
+    is_listed = db.Column(db.Boolean, nullable=False, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Notification(db.Model):
@@ -100,6 +92,5 @@ class Notification(db.Model):
     is_read = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
-    # Foreign keys
     student_id = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=True)
