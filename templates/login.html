@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-5">
+        <div class="col-md-7 col-lg-5">
             <div class="card shadow-sm border-0 rounded-3">
                 <div class="card-header bg-primary text-white py-3">
                     <h4 class="mb-0 text-center fw-medium">Student Login</h4>
@@ -13,6 +13,7 @@
                 <div class="card-body p-4">
                     <div class="text-center mb-4">
                         <i class="fas fa-user-graduate text-primary" style="font-size: 3rem;"></i>
+                        <p class="mt-2 text-muted">Sign in to access your dashboard</p>
                     </div>
                     
                     <form method="post" novalidate>
@@ -20,53 +21,41 @@
                         
                         <div class="mb-3">
                             <label for="{{ form.username.id }}" class="form-label">Username</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-user"></i></span>
-                                {{ form.username(class="form-control" + (" is-invalid" if form.username.errors else ""), placeholder="Enter username") }}
-                                {% if form.username.errors %}
-                                <div class="invalid-feedback">
-                                    {% for error in form.username.errors %}
-                                        {{ error }}
-                                    {% endfor %}
-                                </div>
-                                {% endif %}
+                            {{ form.username(class="form-control" + (" is-invalid" if form.username.errors else ""), placeholder="Enter your username") }}
+                            {% if form.username.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.username.errors %}
+                                    {{ error }}
+                                {% endfor %}
                             </div>
+                            {% endif %}
                         </div>
                         
                         <div class="mb-3">
                             <label for="{{ form.password.id }}" class="form-label">Password</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                                {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else ""), placeholder="Enter password") }}
-                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                {% if form.password.errors %}
-                                <div class="invalid-feedback">
-                                    {% for error in form.password.errors %}
-                                        {{ error }}
-                                    {% endfor %}
-                                </div>
-                                {% endif %}
+                            {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else ""), placeholder="Enter your password") }}
+                            {% if form.password.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.password.errors %}
+                                    {{ error }}
+                                {% endfor %}
                             </div>
+                            {% endif %}
                         </div>
                         
-                        <div class="mb-3 form-check">
+                        <div class="mb-4 form-check">
                             {{ form.remember_me(class="form-check-input") }}
-                            <label class="form-check-label" for="{{ form.remember_me.id }}">Remember Me</label>
+                            <label class="form-check-label" for="{{ form.remember_me.id }}">
+                                Remember me
+                            </label>
                         </div>
                         
                         <div class="d-grid mb-3">
                             {{ form.submit(class="btn btn-primary") }}
                         </div>
                         
-                        <div class="text-center mb-3">
-                            <span class="me-2">Don't have an account?</span>
-                            <a href="{{ url_for('register') }}" class="text-decoration-none">Register here</a>
-                        </div>
-                        
                         <div class="text-center">
-                            <a href="{{ url_for('admin_login') }}" class="text-decoration-none">Admin Login</a>
+                            <p class="mb-0">Don't have an account? <a href="{{ url_for('register') }}" class="text-decoration-none">Register here</a></p>
                         </div>
                     </form>
                 </div>
@@ -74,24 +63,4 @@
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block extra_js %}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Toggle password visibility
-        const togglePassword = document.getElementById('togglePassword');
-        const passwordInput = document.getElementById('{{ form.password.id }}');
-        
-        togglePassword.addEventListener('click', function() {
-            // Toggle type attribute
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
-            
-            // Toggle eye icon
-            this.querySelector('i').classList.toggle('fa-eye');
-            this.querySelector('i').classList.toggle('fa-eye-slash');
-        });
-    });
-</script>
 {% endblock %}

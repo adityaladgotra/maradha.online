@@ -23,8 +23,9 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="{{ url_for('home') }}">
-                <span class="text-primary">Maradha</span> Institute
+            <a class="navbar-brand d-flex align-items-center" href="{{ url_for('home') }}">
+                <img src="{{ url_for('static', filename='img/maradha-logo.png') }}" alt="Maradha Institute Logo" height="40" class="me-2">
+                <span class="fw-bold">Maradha Institute</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -41,19 +42,38 @@
                         <a class="nav-link" href="{{ url_for('home') }}#benefits">Benefits</a>
                     </li>
                     {% if current_user.is_authenticated %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-user-shield me-1"></i> Admin
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{{ url_for('admin_logout') }}">Logout</a></li>
-                        </ul>
-                    </li>
+                        {% if current_user.__class__.__name__ == 'Admin' %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user-shield me-1"></i> Admin
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{{ url_for('admin_logout') }}">Logout</a></li>
+                            </ul>
+                        </li>
+                        {% else %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user-graduate me-1"></i> {{ current_user.full_name }}
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="{{ url_for('student_dashboard') }}">Dashboard</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a></li>
+                            </ul>
+                        </li>
+                        {% endif %}
                     {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('admin_login') }}">Admin Login</a>
+                        <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('register') }}">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_login') }}">Admin</a>
                     </li>
                     {% endif %}
                 </ul>
@@ -96,6 +116,8 @@
                         <li class="mb-2"><a href="{{ url_for('home') }}" class="text-white-50">Home</a></li>
                         <li class="mb-2"><a href="{{ url_for('home') }}#courses" class="text-white-50">Courses</a></li>
                         <li class="mb-2"><a href="{{ url_for('home') }}#benefits" class="text-white-50">Benefits</a></li>
+                        <li class="mb-2"><a href="{{ url_for('login') }}" class="text-white-50">Student Login</a></li>
+                        <li class="mb-2"><a href="{{ url_for('register') }}" class="text-white-50">Student Register</a></li>
                         <li><a href="{{ url_for('admin_login') }}" class="text-white-50">Admin Login</a></li>
                     </ul>
                 </div>
