@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Student - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Add New Student</h2>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+        </a>
+    </div>
+    
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Student Information</h5>
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data" novalidate>
+                {{ form.hidden_tag() }}
+                
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label for="{{ form.username.id }}" class="form-label">Username <span class="text-danger">*</span></label>
+                        {{ form.username(class="form-control" + (" is-invalid" if form.username.errors else ""), placeholder="Create a username") }}
+                        {% if form.username.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.username.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <small class="form-text text-muted">Username must be at least 4 characters long.</small>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label for="{{ form.full_name.id }}" class="form-label">Full Name <span class="text-danger">*</span></label>
+                        {{ form.full_name(class="form-control" + (" is-invalid" if form.full_name.errors else ""), placeholder="Enter student's full name") }}
+                        {% if form.full_name.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.full_name.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label for="{{ form.email.id }}" class="form-label">Email <span class="text-danger">*</span></label>
+                        {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else ""), placeholder="Enter student's email address") }}
+                        {% if form.email.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.email.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label for="{{ form.phone_number.id }}" class="form-label">Phone Number <span class="text-danger">*</span></label>
+                        {{ form.phone_number(class="form-control" + (" is-invalid" if form.phone_number.errors else ""), placeholder="Enter student's phone number") }}
+                        {% if form.phone_number.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.phone_number.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label for="{{ form.password.id }}" class="form-label">Password <span class="text-danger">*</span></label>
+                        {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else ""), placeholder="Create a password") }}
+                        {% if form.password.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.password.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <small class="form-text text-muted">Password must be at least 8 characters long.</small>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label for="{{ form.course_id.id }}" class="form-label">Course <span class="text-danger">*</span></label>
+                        {{ form.course_id(class="form-select" + (" is-invalid" if form.course_id.errors else "")) }}
+                        {% if form.course_id.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.course_id.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label for="{{ form.student_photo.id }}" class="form-label">Student Photo (Optional)</label>
+                        {{ form.student_photo(class="form-control" + (" is-invalid" if form.student_photo.errors else "")) }}
+                        {% if form.student_photo.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.student_photo.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <small class="form-text text-muted">Upload a photo of the student (JPG, JPEG, PNG).</small>
+                    </div>
+                </div>
+                
+                <hr class="my-4">
+                
+                <div class="d-flex justify-content-between">
+                    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-light">Cancel</a>
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

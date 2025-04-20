@@ -8,7 +8,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 
 from app import app, db
 from models import Admin, Student, Course, Enrollment, Notification
-from forms import AdminLoginForm, StudentLoginForm, StudentRegistrationForm, CourseForm, EnrollmentForm
+from forms import AdminLoginForm, StudentLoginForm, StudentRegistrationForm, CourseForm, EnrollmentForm, AdminStudentUploadForm
 
 # Home page
 @app.route('/')
@@ -98,9 +98,13 @@ def admin_logout():
 @app.route('/admin/dashboard')
 @login_required
 def admin_dashboard():
+    if not isinstance(current_user, Admin):
+        return redirect(url_for('home'))
+        
     courses = Course.query.order_by(Course.created_at.desc()).all()
     enrollments = Enrollment.query.order_by(Enrollment.created_at.desc()).all()
-    return render_template('admin_dashboard.html', courses=courses, enrollments=enrollments)
+    students = Student.query.order_by(Student.created_at.desc()).all()
+    return render_template('admin_dashboard.html', courses=courses, enrollments=enrollments, students=students)
 
 # Add new course
 @app.route('/admin/course/add', methods=['GET', 'POST'])
@@ -273,6 +277,92 @@ def mark_notification_read(notification_id):
     db.session.commit()
     
     return jsonify({'success': True})
+
+# Admin Add Student
+@app.route('/admin/student/add', methods=['GET', 'POST'])
+@login_required
+def admin_add_student():
+    if not isinstance(current_user, Admin):
+        return redirect(url_for('home'))
+        
+    form = AdminStudentUploadForm()
+    
+    if form.validate_on_submit():
+        # Create the student
+        student = Student(
+            username=form.username.data,
+            email=form.email.data,
+            full_name=form.full_name.data,
+            phone_number=form.phone_number.data
+        )
+        student.set_password(form.password.data)
+        db.session.add(student)
+        db.session.flush()  # Get the student ID before committing
+        
+        # Save the student photo if provided
+        if form.student_photo.data:
+            filename = secure_filename(f"student_{student.id}_{int(datetime.now().timestamp())}.jpg")
+            photo_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            form.student_photo.data.save(photo_path)
+            
+            # Create an enrollment for this student
+            enrollment = Enrollment(
+                full_name=form.full_name.data,
+                father_name="Added by Admin",  # Placeholder
+                mother_name="Added by Admin",  # Placeholder
+                phone_number=form.phone_number.data,
+                whatsapp_number=form.phone_number.data,  # Using same number as placeholder
+                email=form.email.data,
+                address="Added via Admin Panel",  # Placeholder
+                village_town="Added via Admin",  # Placeholder
+                district="Added via Admin",  # Placeholder
+                state="Added via Admin",  # Placeholder
+                pin_code="000000",  # Placeholder
+                education_status="Added via Admin Panel",  # Placeholder
+                why_learn="Added via Admin Panel",  # Placeholder
+                id_photo_path=os.path.join('uploads', filename),
+                course_id=form.course_id.data,
+                student_id=student.id
+            )
+            db.session.add(enrollment)
+        else:
+            # Create an enrollment without photo
+            enrollment = Enrollment(
+                full_name=form.full_name.data,
+                father_name="Added by Admin",  # Placeholder
+                mother_name="Added by Admin",  # Placeholder
+                phone_number=form.phone_number.data,
+                whatsapp_number=form.phone_number.data,  # Using same number as placeholder
+                email=form.email.data,
+                address="Added via Admin Panel",  # Placeholder
+                village_town="Added via Admin",  # Placeholder
+                district="Added via Admin",  # Placeholder
+                state="Added via Admin",  # Placeholder
+                pin_code="000000",  # Placeholder
+                education_status="Added via Admin Panel",  # Placeholder
+                why_learn="Added via Admin Panel",  # Placeholder
+                course_id=form.course_id.data,
+                student_id=student.id
+            )
+            db.session.add(enrollment)
+            
+        db.session.commit()
+        
+        # Add notification for the student
+        course = Course.query.get(form.course_id.data)
+        notification = Notification(
+            title="Welcome to Maradha Institute",
+            message=f"You have been enrolled in the course '{course.title}' by the admin.",
+            student_id=student.id,
+            course_id=course.id
+        )
+        db.session.add(notification)
+        db.session.commit()
+        
+        flash('Student added and enrolled in the course successfully!', 'success')
+        return redirect(url_for('admin_dashboard'))
+        
+    return render_template('admin_add_student.html', form=form)
 
 # Error handlers
 @app.errorhandler(404)
