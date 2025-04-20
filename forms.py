@@ -1,13 +1,44 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, TextAreaField, PasswordField, DateField, FloatField, SelectField, SubmitField
-from wtforms.validators import DataRequired, Email, Optional, Length, ValidationError
+from wtforms import StringField, TextAreaField, PasswordField, DateField, FloatField, SelectField, SubmitField, BooleanField
+from wtforms.validators import DataRequired, Email, Optional, Length, ValidationError, EqualTo
 import re
+from models import Student
 
-class LoginForm(FlaskForm):
+class AdminLoginForm(FlaskForm):
+    username = StringField('Admin Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    remember_me = BooleanField('Remember Me')
+    submit = SubmitField('Login as Admin')
+
+class StudentLoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
+    remember_me = BooleanField('Remember Me')
     submit = SubmitField('Login')
+    
+class StudentRegistrationForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired(), Length(min=4, max=64)])
+    full_name = StringField('Full Name', validators=[DataRequired(), Length(max=100)])
+    email = StringField('Email', validators=[DataRequired(), Email(), Length(max=120)])
+    phone_number = StringField('Phone Number', validators=[DataRequired(), Length(min=10, max=15)])
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=8)])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Register')
+    
+    def validate_username(self, username):
+        student = Student.query.filter_by(username=username.data).first()
+        if student:
+            raise ValidationError('That username is already taken. Please choose a different one.')
+            
+    def validate_email(self, email):
+        student = Student.query.filter_by(email=email.data).first()
+        if student:
+            raise ValidationError('That email is already registered. Please use a different one or login.')
+            
+    def validate_phone_number(self, field):
+        if not re.match(r'^\d{10,15}$', field.data):
+            raise ValidationError('Phone number must be 10-15 digits')
 
 class CourseForm(FlaskForm):
     title = StringField('Course Title', validators=[DataRequired(), Length(max=100)])

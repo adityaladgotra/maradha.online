@@ -7,8 +7,8 @@ from werkzeug.utils import secure_filename
 from flask_login import login_user, logout_user, login_required, current_user
 
 from app import app, db
-from models import Admin, Course, Enrollment
-from forms import LoginForm, CourseForm, EnrollmentForm
+from models import Admin, Student, Course, Enrollment, Notification
+from forms import AdminLoginForm, StudentLoginForm, StudentRegistrationForm, CourseForm, EnrollmentForm
 
 # Home page
 @app.route('/')
@@ -72,12 +72,12 @@ def admin_login():
     if current_user.is_authenticated:
         return redirect(url_for('admin_dashboard'))
         
-    form = LoginForm()
+    form = AdminLoginForm()
     if form.validate_on_submit():
         admin = Admin.query.filter_by(username=form.username.data).first()
         
-        if admin and check_password_hash(admin.password_hash, form.password.data):
-            login_user(admin)
+        if admin and admin.check_password(form.password.data):
+            login_user(admin, remember=form.remember_me.data)
             next_page = request.args.get('next')
             flash('Logged in successfully!', 'success')
             return redirect(next_page or url_for('admin_dashboard'))
@@ -121,6 +121,18 @@ def add_course():
         )
         
         db.session.add(course)
+        db.session.commit()
+        
+        # Create notifications for all students about the new course
+        students = Student.query.all()
+        for student in students:
+            notification = Notification(
+                title="New Course Available",
+                message=f"A new course '{course.title}' is now available for enrollment.",
+                student_id=student.id,
+                course_id=course.id
+            )
+            db.session.add(notification)
         db.session.commit()
         
         flash('Course added successfully!', 'success')
@@ -181,6 +193,86 @@ def filter_enrollments(course_id):
 def enrollment_detail(enrollment_id):
     enrollment = Enrollment.query.get_or_404(enrollment_id)
     return render_template('enrollment_detail.html', enrollment=enrollment)
+
+# Student registration
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    
+    form = StudentRegistrationForm()
+    if form.validate_on_submit():
+        student = Student(
+            username=form.username.data,
+            email=form.email.data,
+            full_name=form.full_name.data,
+            phone_number=form.phone_number.data,
+        )
+        student.set_password(form.password.data)
+        db.session.add(student)
+        db.session.commit()
+        
+        flash('Your account has been created! You can now log in.', 'success')
+        return redirect(url_for('login'))
+    
+    return render_template('register.html', form=form)
+
+# Student login
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('student_dashboard'))
+    
+    form = StudentLoginForm()
+    if form.validate_on_submit():
+        student = Student.query.filter_by(username=form.username.data).first()
+        
+        if student and student.check_password(form.password.data):
+            login_user(student, remember=form.remember_me.data)
+            next_page = request.args.get('next')
+            flash('Logged in successfully!', 'success')
+            return redirect(next_page or url_for('student_dashboard'))
+        else:
+            flash('Invalid username or password.', 'danger')
+    
+    return render_template('login.html', form=form)
+
+# Student logout
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('You have been logged out.', 'success')
+    return redirect(url_for('home'))
+
+# Student dashboard
+@app.route('/dashboard')
+@login_required
+def student_dashboard():
+    if not isinstance(current_user, Student):
+        return redirect(url_for('admin_dashboard'))
+    
+    enrolled_courses = [enrollment.course for enrollment in current_user.enrollments]
+    notifications = Notification.query.filter_by(student_id=current_user.id).order_by(Notification.created_at.desc()).all()
+    
+    return render_template('student_dashboard.html', enrolled_courses=enrolled_courses, notifications=notifications)
+
+# Mark notification as read
+@app.route('/notification/<int:notification_id>/read', methods=['POST'])
+@login_required
+def mark_notification_read(notification_id):
+    if not isinstance(current_user, Student):
+        return jsonify({'success': False, 'message': 'Unauthorized'}), 403
+    
+    notification = Notification.query.get_or_404(notification_id)
+    
+    if notification.student_id != current_user.id:
+        return jsonify({'success': False, 'message': 'Unauthorized'}), 403
+    
+    notification.is_read = True
+    db.session.commit()
+    
+    return jsonify({'success': True})
 
 # Error handlers
 @app.errorhandler(404)

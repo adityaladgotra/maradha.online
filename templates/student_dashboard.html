@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+
+{% block title %}Student Dashboard | Maradha Institute{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0">Student Dashboard</h2>
+                <a href="{{ url_for('logout') }}" class="btn btn-outline-danger">
+                    <i class="fas fa-sign-out-alt me-2"></i> Logout
+                </a>
+            </div>
+            
+            <div class="alert alert-info">
+                <div class="d-flex">
+                    <div class="me-3">
+                        <i class="fas fa-info-circle fa-2x"></i>
+                    </div>
+                    <div>
+                        <h5 class="alert-heading">Welcome back, {{ current_user.full_name }}!</h5>
+                        <p class="mb-0">Stay updated on your course applications and get notifications about new courses.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Notifications Section -->
+        <div class="col-lg-4 order-lg-2">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-light py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-bell me-2"></i> Notifications</h5>
+                        {% if notifications %}
+                            <span class="badge bg-primary">{{ notifications|selectattr('is_read', 'equalto', false)|list|length }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    {% if notifications %}
+                        <div class="list-group list-group-flush" id="notifications-list">
+                            {% for notification in notifications %}
+                                <div class="list-group-item list-group-item-action {% if not notification.is_read %}bg-light{% endif %}">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h6 class="mb-1">{{ notification.title }}</h6>
+                                            <p class="mb-1 text-muted small">{{ notification.created_at.strftime('%d %b, %Y') }}</p>
+                                            <p class="mb-1">{{ notification.message }}</p>
+                                        </div>
+                                        {% if notification.course %}
+                                            <a href="{{ url_for('course_detail', course_id=notification.course.id) }}" class="btn btn-sm btn-outline-primary ms-2">View Course</a>
+                                        {% endif %}
+                                    </div>
+                                    {% if not notification.is_read %}
+                                        <button class="btn btn-sm btn-link text-muted p-0 mt-2 mark-read" data-notification-id="{{ notification.id }}">
+                                            Mark as read
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-bell-slash text-muted mb-3" style="font-size: 3rem;"></i>
+                            <h6>No notifications yet</h6>
+                            <p class="text-muted mb-0">We'll notify you about new courses and updates</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- My Courses Section -->
+        <div class="col-lg-8 order-lg-1">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light py-3">
+                    <h5 class="mb-0"><i class="fas fa-graduation-cap me-2"></i> My Enrolled Courses</h5>
+                </div>
+                <div class="card-body">
+                    {% if enrolled_courses %}
+                        <div class="row row-cols-1 row-cols-md-2 g-4">
+                            {% for course in enrolled_courses %}
+                                <div class="col">
+                                    <div class="card h-100 shadow-sm">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ course.title }}</h5>
+                                            <p class="card-text text-muted">
+                                                <i class="fas fa-calendar-alt me-1"></i>
+                                                {{ course.start_date.strftime('%d %b') }} - {{ course.end_date.strftime('%d %b, %Y') }}
+                                            </p>
+                                            <div class="d-flex mt-3">
+                                                <a href="{{ url_for('course_detail', course_id=course.id) }}" class="btn btn-primary">View Course</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-book text-muted mb-3" style="font-size: 3rem;"></i>
+                            <h5>You're not enrolled in any courses yet</h5>
+                            <p class="text-muted mb-4">Browse our courses and enroll to see them here</p>
+                            <a href="{{ url_for('home') }}" class="btn btn-primary">Browse Courses</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle mark as read buttons
+        const markReadButtons = document.querySelectorAll('.mark-read');
+        
+        markReadButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const notificationId = this.getAttribute('data-notification-id');
+                
+                fetch(`/notification/${notificationId}/read`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update UI
+                        const listItem = this.closest('.list-group-item');
+                        listItem.classList.remove('bg-light');
+                        this.remove();
+                        
+                        // Update notification count
+                        const badge = document.querySelector('.card-header .badge');
+                        if (badge) {
+                            const currentCount = parseInt(badge.textContent);
+                            if (currentCount > 1) {
+                                badge.textContent = currentCount - 1;
+                            } else {
+                                badge.remove();
+                            }
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error marking notification as read:', error);
+                });
+            });
+        });
+    });
+</script>
+{% endblock %}

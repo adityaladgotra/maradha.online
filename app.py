@@ -46,8 +46,8 @@ db.init_app(app)
 # Initialize LoginManager
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'admin_login'
-login_manager.login_message = 'Please log in to access the admin dashboard.'
+login_manager.login_view = 'login'
+login_manager.login_message = 'Please log in to access this page.'
 login_manager.login_message_category = 'warning'
 
 # Create upload folder if it doesn't exist
@@ -56,7 +56,7 @@ if not os.path.exists(app.config["UPLOAD_FOLDER"]):
 
 with app.app_context():
     # Import models and routes here to avoid circular imports
-    from models import Admin
+    from models import Admin, Student
     import routes  # noqa: F401
     
     # Create all database tables
@@ -65,16 +65,25 @@ with app.app_context():
     # Create admin account if it doesn't exist
     admin = Admin.query.filter_by(username="maradha.online").first()
     if not admin:
-        from werkzeug.security import generate_password_hash
-        admin = Admin(
-            username="maradha.online",
-            password_hash=generate_password_hash("Maradha@123")
-        )
+        admin = Admin(username="maradha.online")
+        admin.set_password("Maradha@123")
         db.session.add(admin)
         db.session.commit()
         logging.info("Admin account created")
 
 @login_manager.user_loader
-def load_user(admin_id):
-    from models import Admin
-    return Admin.query.get(int(admin_id))
+def load_user(user_id):
+    # The ID format will be "admin-123" or "student-123"
+    if '-' not in user_id:
+        return None
+        
+    user_type, user_id = user_id.split('-')
+    
+    from models import Admin, Student
+    
+    if user_type == 'admin':
+        return Admin.query.get(int(user_id))
+    elif user_type == 'student':
+        return Student.query.get(int(user_id))
+    
+    return None

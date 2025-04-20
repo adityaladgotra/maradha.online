@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}Student Registration - Maradha Institute{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-header bg-primary text-white py-3">
+                    <h4 class="mb-0 text-center fw-medium">Create Student Account</h4>
+                </div>
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-user-plus text-primary" style="font-size: 3rem;"></i>
+                        <p class="mt-2 text-muted">Register to get notified about new courses and track your applications</p>
+                    </div>
+                    
+                    <form method="post" novalidate>
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.username.id }}" class="form-label">Username <span class="text-danger">*</span></label>
+                                {{ form.username(class="form-control" + (" is-invalid" if form.username.errors else ""), placeholder="Create a username") }}
+                                {% if form.username.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.username.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                                <div class="form-text">Username must be at least 4 characters long.</div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="{{ form.full_name.id }}" class="form-label">Full Name <span class="text-danger">*</span></label>
+                                {{ form.full_name(class="form-control" + (" is-invalid" if form.full_name.errors else ""), placeholder="Enter your full name") }}
+                                {% if form.full_name.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.full_name.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="{{ form.email.id }}" class="form-label">Email <span class="text-danger">*</span></label>
+                                {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else ""), placeholder="Enter your email address") }}
+                                {% if form.email.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.email.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="{{ form.phone_number.id }}" class="form-label">Phone Number <span class="text-danger">*</span></label>
+                                {{ form.phone_number(class="form-control" + (" is-invalid" if form.phone_number.errors else ""), placeholder="Enter your phone number") }}
+                                {% if form.phone_number.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.phone_number.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="{{ form.password.id }}" class="form-label">Password <span class="text-danger">*</span></label>
+                                {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else ""), placeholder="Create a password") }}
+                                {% if form.password.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.password.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                                <div class="form-text">Password must be at least 8 characters long.</div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="{{ form.confirm_password.id }}" class="form-label">Confirm Password <span class="text-danger">*</span></label>
+                                {{ form.confirm_password(class="form-control" + (" is-invalid" if form.confirm_password.errors else ""), placeholder="Confirm your password") }}
+                                {% if form.confirm_password.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.confirm_password.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-12 mt-4">
+                                <div class="d-grid">
+                                    {{ form.submit(class="btn btn-primary") }}
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 text-center mt-3">
+                                <span>Already have an account?</span>
+                                <a href="{{ url_for('login') }}" class="text-decoration-none">Login here</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
