@@ -71,7 +71,8 @@ with app.app_context():
     from models import Admin, Student
     import routes  # noqa: F401
     
-    # Create all database tables
+    # Recreate all database tables
+    db.drop_all()
     db.create_all()
     
     # Create admin account if it doesn't exist
