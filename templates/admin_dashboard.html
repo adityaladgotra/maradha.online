@@ -35,7 +35,7 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Stats Cards -->
             <div class="row g-3">
                 <div class="col-12">
@@ -85,7 +85,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="col-md-9">
             <!-- Content Tabs -->
             <div class="tab-content">
@@ -161,7 +161,7 @@
                                                             <i class="fas fa-trash-alt"></i>
                                                         </button>
                                                     </div>
-                                                    
+
                                                     <!-- Delete Course Modal -->
                                                     <div class="modal fade" id="deleteCourseModal{{ course.id }}" tabindex="-1" aria-hidden="true">
                                                         <div class="modal-dialog">
@@ -206,7 +206,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Enrollments Tab -->
                 <div class="tab-pane fade" id="enrollments-tab">
                     <div class="card shadow-sm rounded-3">
@@ -266,7 +266,7 @@
                                                             data-bs-toggle="modal" data-bs-target="#viewEnrollmentModal{{ enrollment.id }}">
                                                         <i class="fas fa-eye"></i> View
                                                     </button>
-                                                    
+
                                                     <!-- View Enrollment Modal -->
                                                     <div class="modal fade" id="viewEnrollmentModal{{ enrollment.id }}" tabindex="-1" aria-hidden="true">
                                                         <div class="modal-dialog modal-lg">
@@ -320,7 +320,7 @@
                                                                             </table>
                                                                         </div>
                                                                     </div>
-                                                                    
+
                                                                     <div class="row mb-4">
                                                                         <div class="col-12">
                                                                             <h6 class="fw-bold">Address</h6>
@@ -345,7 +345,7 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                    
+
                                                                     <div class="row mb-4">
                                                                         <div class="col-12">
                                                                             <h6 class="fw-bold">Course Information</h6>
@@ -365,14 +365,14 @@
                                                                             </table>
                                                                         </div>
                                                                     </div>
-                                                                    
+
                                                                     <div class="row">
                                                                         <div class="col-12">
                                                                             <h6 class="fw-bold">Motivation</h6>
                                                                             <p class="mb-0">{{ enrollment.why_learn }}</p>
                                                                         </div>
                                                                     </div>
-                                                                    
+
                                                                     {% if enrollment.id_photo_path %}
                                                                     <div class="row mt-4">
                                                                         <div class="col-12">
@@ -416,7 +416,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Add Course Tab -->
                 <div class="tab-pane fade {% if action == 'add_course' %}show active{% endif %}" id="add-course-tab">
                     <div class="card shadow-sm rounded-3">
@@ -439,7 +439,7 @@
                                   novalidate>
                                 {% if form %}
                                 {{ form.hidden_tag() }}
-                                
+
                                 <div class="row g-3">
                                     <div class="col-md-12">
                                         <label for="{{ form.title.id }}" class="form-label">Course Title <span class="text-danger">*</span></label>
@@ -452,7 +452,7 @@
                                         </div>
                                         {% endif %}
                                     </div>
-                                    
+
                                     <div class="col-md-12">
                                         <label for="{{ form.description.id }}" class="form-label">Course Description <span class="text-danger">*</span></label>
                                         {{ form.description(class="form-control" + (" is-invalid" if form.description.errors else ""), placeholder="Enter detailed course description", rows=4) }}
@@ -464,7 +464,7 @@
                                         </div>
                                         {% endif %}
                                     </div>
-                                    
+
                                     <div class="col-md-6">
                                         <label for="{{ form.start_date.id }}" class="form-label">Start Date <span class="text-danger">*</span></label>
                                         {{ form.start_date(class="form-control" + (" is-invalid" if form.start_date.errors else ""), type="date") }}
@@ -476,7 +476,7 @@
                                         </div>
                                         {% endif %}
                                     </div>
-                                    
+
                                     <div class="col-md-6">
                                         <label for="{{ form.end_date.id }}" class="form-label">End Date <span class="text-danger">*</span></label>
                                         {{ form.end_date(class="form-control" + (" is-invalid" if form.end_date.errors else ""), type="date") }}
@@ -488,7 +488,7 @@
                                         </div>
                                         {% endif %}
                                     </div>
-                                    
+
                                     <div class="col-md-6">
                                         <label for="{{ form.price.id }}" class="form-label">Regular Price (₹) <span class="text-danger">*</span></label>
                                         {{ form.price(class="form-control" + (" is-invalid" if form.price.errors else ""), placeholder="Enter regular price", type="number") }}
@@ -500,7 +500,7 @@
                                         </div>
                                         {% endif %}
                                     </div>
-                                    
+
                                     <div class="col-md-6">
                                         <label for="{{ form.offer_price.id }}" class="form-label">Offer Price (₹) <span class="text-danger">*</span></label>
                                         {{ form.offer_price(class="form-control" + (" is-invalid" if form.offer_price.errors else ""), placeholder="Enter offer price", type="number") }}
@@ -512,7 +512,7 @@
                                         </div>
                                         {% endif %}
                                     </div>
-                                    
+
                                     <div class="col-md-12">
                                         <label for="{{ form.image_url.id }}" class="form-label">Image URL</label>
                                         {{ form.image_url(class="form-control" + (" is-invalid" if form.image_url.errors else ""), placeholder="Enter image URL (optional)") }}
@@ -525,7 +525,7 @@
                                         {% endif %}
                                         <div class="form-text">Enter a URL for the course banner image (e.g., from Unsplash or other free image sites)</div>
                                     </div>
-                                    
+
                                     <div class="col-md-12">
                                         <label for="{{ form.benefits.id }}" class="form-label">Course Benefits</label>
                                         {{ form.benefits(class="form-control" + (" is-invalid" if form.benefits.errors else ""), placeholder="Enter course benefits (one per line)", rows=4) }}
@@ -538,7 +538,7 @@
                                         {% endif %}
                                         <div class="form-text">Enter each benefit on a new line (e.g., "Learn HTML & CSS" "Build real projects" etc.)</div>
                                     </div>
-                                    
+
                                     <div class="col-12 mt-4">
                                         {{ form.submit(class="btn btn-primary") }}
                                         {% if action == 'edit_course' %}
@@ -556,7 +556,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- View Enrollment Tab (shown when triggered) -->
                 {% if action == 'view_enrollment' %}
                 <div class="tab-pane fade show active" id="view-enrollment-tab">
@@ -615,7 +615,7 @@
                                     </table>
                                 </div>
                             </div>
-                            
+
                             <div class="row mb-4">
                                 <div class="col-12">
                                     <h6 class="fw-bold">Address</h6>
@@ -640,7 +640,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="row mb-4">
                                 <div class="col-12">
                                     <h6 class="fw-bold">Course Information</h6>
@@ -660,25 +660,25 @@
                                     </table>
                                 </div>
                             </div>
-                            
+
                             <div class="row">
                                 <div class="col-12">
                                     <h6 class="fw-bold">Motivation</h6>
                                     <p>{{ enrollment.why_learn }}</p>
                                 </div>
                             </div>
-                            
+
                             {% if enrollment.id_photo_path %}
                             <div class="row mt-4">
                                 <div class="col-12">
                                     <h6 class="fw-bold">Uploaded Document</h6>
                                     <a href="{{ url_for('static', filename=enrollment.id_photo_path) }}" class="btn btn-outline-primary" target="_blank">
-                                        <i class="fas fa-file-alt me-2"></i> View Document
+                                        <i class="fas fa-filealt me-2"></i> View Document
                                     </a>
                                 </div>
                             </div>
                             {% endif %}
-                            
+
                             <div class="row mt-4">
                                 <div class="col-12">
                                     <h6 class="fw-bold">Actions</h6>
@@ -697,7 +697,7 @@
                     </div>
                 </div>
                 {% endif %}
-                
+
                 <!-- Top Students Management Tab -->
                 <div class="tab-pane fade" id="top-students-tab">
                     <div class="card shadow-sm rounded-3">
