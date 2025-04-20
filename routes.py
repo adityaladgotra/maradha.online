@@ -29,7 +29,7 @@ def course_detail(course_id):
 def enrollment_form(course_id):
     course = Course.query.get_or_404(course_id)
     form = EnrollmentForm()
-    
+
     if form.validate_on_submit():
         # Handle file upload if provided
         id_photo_path = None
@@ -38,7 +38,7 @@ def enrollment_form(course_id):
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             form.id_photo.data.save(filepath)
             id_photo_path = os.path.join('uploads', filename)
-        
+
         # Create enrollment
         enrollment = Enrollment(
             full_name=form.full_name.data,
@@ -57,14 +57,14 @@ def enrollment_form(course_id):
             id_photo_path=id_photo_path,
             course_id=course.id
         )
-        
+
         db.session.add(enrollment)
         db.session.commit()
-        
+
         # Set success message in localStorage (handled by JS)
         flash('Application submitted successfully! We will contact you soon.', 'success')
         return redirect(url_for('home', enrollment_success=True))
-    
+
     return render_template('enrollment_form.html', form=form, course=course)
 
 # Admin login
@@ -72,11 +72,11 @@ def enrollment_form(course_id):
 def admin_login():
     if current_user.is_authenticated:
         return redirect(url_for('admin_dashboard'))
-        
+
     form = AdminLoginForm()
     if form.validate_on_submit():
         admin = Admin.query.filter_by(username=form.username.data).first()
-        
+
         if admin and admin.check_password(form.password.data):
             login_user(admin, remember=form.remember_me.data)
             next_page = request.args.get('next')
@@ -84,7 +84,7 @@ def admin_login():
             return redirect(next_page or url_for('admin_dashboard'))
         else:
             flash('Invalid username or password.', 'danger')
-            
+
     return render_template('admin_login.html', form=form)
 
 # Admin logout
@@ -101,7 +101,7 @@ def admin_logout():
 def admin_dashboard():
     if not isinstance(current_user, Admin):
         return redirect(url_for('home'))
-        
+
     courses = Course.query.order_by(Course.created_at.desc()).all()
     enrollments = Enrollment.query.order_by(Enrollment.created_at.desc()).all()
     students = Student.query.order_by(Student.created_at.desc()).all()
@@ -112,7 +112,7 @@ def admin_dashboard():
 @login_required
 def add_course():
     form = CourseForm()
-    
+
     if form.validate_on_submit():
         course = Course(
             title=form.title.data,
@@ -124,10 +124,10 @@ def add_course():
             image_url=form.image_url.data,
             benefits=form.benefits.data
         )
-        
+
         db.session.add(course)
         db.session.commit()
-        
+
         # Create notifications for all students about the new course
         students = Student.query.all()
         for student in students:
@@ -139,10 +139,10 @@ def add_course():
             )
             db.session.add(notification)
         db.session.commit()
-        
+
         flash('Course added successfully!', 'success')
         return redirect(url_for('admin_dashboard'))
-    
+
     return render_template('add_course.html', form=form)
 
 # Edit course
@@ -151,14 +151,14 @@ def add_course():
 def edit_course(course_id):
     course = Course.query.get_or_404(course_id)
     form = CourseForm(obj=course)
-    
+
     if form.validate_on_submit():
         form.populate_obj(course)
         db.session.commit()
-        
+
         flash('Course updated successfully!', 'success')
         return redirect(url_for('admin_dashboard'))
-    
+
     return render_template('edit_course.html', form=form, course=course)
 
 # Delete course
@@ -166,10 +166,10 @@ def edit_course(course_id):
 @login_required
 def delete_course(course_id):
     course = Course.query.get_or_404(course_id)
-    
+
     db.session.delete(course)
     db.session.commit()
-    
+
     flash('Course deleted successfully!', 'success')
     return redirect(url_for('admin_dashboard'))
 
@@ -178,7 +178,7 @@ def delete_course(course_id):
 @login_required
 def filter_enrollments(course_id):
     enrollments = Enrollment.query.filter_by(course_id=course_id).order_by(Enrollment.created_at.desc()).all()
-    
+
     enrollment_data = []
     for enrollment in enrollments:
         enrollment_data.append({
@@ -189,7 +189,7 @@ def filter_enrollments(course_id):
             'location': f"{enrollment.village_town}, {enrollment.district}, {enrollment.state}",
             'date': enrollment.created_at.strftime('%d %b, %Y')
         })
-    
+
     return jsonify(enrollment_data)
 
 # View enrollment details
@@ -204,7 +204,7 @@ def enrollment_detail(enrollment_id):
 def register():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
-    
+
     form = StudentRegistrationForm()
     if form.validate_on_submit():
         student = Student(
@@ -216,10 +216,10 @@ def register():
         student.set_password(form.password.data)
         db.session.add(student)
         db.session.commit()
-        
+
         flash('Your account has been created! You can now log in.', 'success')
         return redirect(url_for('login'))
-    
+
     return render_template('register.html', form=form)
 
 # Student login
@@ -227,11 +227,11 @@ def register():
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('student_dashboard'))
-    
+
     form = StudentLoginForm()
     if form.validate_on_submit():
         student = Student.query.filter_by(username=form.username.data).first()
-        
+
         if student and student.check_password(form.password.data):
             login_user(student, remember=form.remember_me.data)
             next_page = request.args.get('next')
@@ -239,7 +239,7 @@ def login():
             return redirect(next_page or url_for('student_dashboard'))
         else:
             flash('Invalid username or password.', 'danger')
-    
+
     return render_template('login.html', form=form)
 
 # Student logout
@@ -256,10 +256,10 @@ def logout():
 def student_dashboard():
     if not isinstance(current_user, Student):
         return redirect(url_for('admin_dashboard'))
-    
+
     enrolled_courses = [enrollment.course for enrollment in current_user.enrollments]
     notifications = Notification.query.filter_by(student_id=current_user.id).order_by(Notification.created_at.desc()).all()
-    
+
     return render_template('student_dashboard.html', enrolled_courses=enrolled_courses, notifications=notifications)
 
 # Mark notification as read
@@ -268,15 +268,15 @@ def student_dashboard():
 def mark_notification_read(notification_id):
     if not isinstance(current_user, Student):
         return jsonify({'success': False, 'message': 'Unauthorized'}), 403
-    
+
     notification = Notification.query.get_or_404(notification_id)
-    
+
     if notification.student_id != current_user.id:
         return jsonify({'success': False, 'message': 'Unauthorized'}), 403
-    
+
     notification.is_read = True
     db.session.commit()
-    
+
     return jsonify({'success': True})
 
 # Admin Add Student
@@ -285,9 +285,9 @@ def mark_notification_read(notification_id):
 def admin_add_student():
     if not isinstance(current_user, Admin):
         return redirect(url_for('home'))
-        
+
     form = AdminStudentUploadForm()
-    
+
     if form.validate_on_submit():
         # Create the student
         student = Student(
@@ -299,13 +299,13 @@ def admin_add_student():
         student.set_password(form.password.data)
         db.session.add(student)
         db.session.flush()  # Get the student ID before committing
-        
+
         # Save the student photo if provided
         if form.student_photo.data:
             filename = secure_filename(f"student_{student.id}_{int(datetime.now().timestamp())}.jpg")
             photo_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             form.student_photo.data.save(photo_path)
-            
+
             # Create an enrollment for this student
             enrollment = Enrollment(
                 full_name=form.full_name.data,
@@ -346,9 +346,9 @@ def admin_add_student():
                 student_id=student.id
             )
             db.session.add(enrollment)
-            
+
         db.session.commit()
-        
+
         # Add notification for the student
         course = Course.query.get(form.course_id.data)
         notification = Notification(
@@ -359,10 +359,10 @@ def admin_add_student():
         )
         db.session.add(notification)
         db.session.commit()
-        
+
         flash('Student added and enrolled in the course successfully!', 'success')
         return redirect(url_for('admin_dashboard'))
-        
+
     return render_template('admin_add_student.html', form=form)
 
 # Error handlers
@@ -381,29 +381,48 @@ def internal_server_error(e):
 def add_top_student():
     if not isinstance(current_user, Admin):
         return redirect(url_for('home'))
-        
+
     if request.method == 'POST':
         photo = request.files.get('photo')
         photo_path = None
-        
+
         if photo:
             filename = secure_filename(f"top_student_{int(datetime.now().timestamp())}.jpg")
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             photo.save(filepath)
             photo_path = os.path.join('uploads', filename)
-            
+
         top_student = TopStudent(
             student_name=request.form.get('student_name'),
             course_name=request.form.get('course_name'),
             rank=request.form.get('rank', type=int),
             photo_path=photo_path
         )
-        
+
         db.session.add(top_student)
         db.session.commit()
-        
+
         flash('Top student added successfully!', 'success')
         return redirect(url_for('admin_dashboard'))
-        
+
     return render_template('admin_add_top_student.html')
 
+@app.route('/admin/top-students/delete/<int:student_id>', methods=['POST'])
+@login_required
+def delete_top_student(student_id):
+    if not isinstance(current_user, Admin):
+        return redirect(url_for('home'))
+
+    top_student = TopStudent.query.get_or_404(student_id)
+
+    # Delete the photo file if it exists
+    if top_student.photo_path:
+        photo_path = os.path.join(app.config['UPLOAD_FOLDER'], os.path.basename(top_student.photo_path))
+        if os.path.exists(photo_path):
+            os.remove(photo_path)
+
+    db.session.delete(top_student)
+    db.session.commit()
+
+    flash('Top student removed successfully!', 'success')
+    return redirect(url_for('admin_dashboard'))
