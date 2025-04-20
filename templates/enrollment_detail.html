@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block title %}Enrollment Details | Admin Dashboard | Maradha Institute{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Enrollment Details</li>
+                </ol>
+            </nav>
+            
+            <div class="card shadow-sm rounded-3">
+                <div class="card-header bg-light py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-user-graduate me-2"></i> Student Enrollment Details
+                        </h5>
+                        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-sm btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="student-img bg-light rounded d-flex align-items-center justify-content-center me-3" style="width: 60px; height: 60px;">
+                                    <i class="fas fa-user text-primary fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h4 class="mb-0">{{ enrollment.full_name }}</h4>
+                                    <p class="text-muted mb-0">{{ enrollment.education_status }}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <h6 class="fw-bold">Course Enrolled</h6>
+                                <p class="mb-0">{{ enrollment.course.title }}</p>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <h6 class="fw-bold">Parent's Information</h6>
+                                <p class="mb-0">Father's Name: {{ enrollment.father_name }}</p>
+                                <p class="mb-0">Mother's Name: {{ enrollment.mother_name }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <h6 class="fw-bold">Contact Information</h6>
+                                <p class="mb-0"><i class="fas fa-phone text-primary me-2"></i> {{ enrollment.phone_number }}</p>
+                                <p class="mb-0"><i class="fab fa-whatsapp text-success me-2"></i> {{ enrollment.whatsapp_number }}</p>
+                                {% if enrollment.email %}
+                                <p class="mb-0"><i class="fas fa-envelope text-danger me-2"></i> {{ enrollment.email }}</p>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <h6 class="fw-bold">Full Address</h6>
+                                <p class="mb-0">{{ enrollment.address|nl2br }}</p>
+                                <p class="mb-0">
+                                    {{ enrollment.village_town }}, {{ enrollment.district }}, 
+                                    {{ enrollment.state }} - {{ enrollment.pin_code }}
+                                </p>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <h6 class="fw-bold">Application Date</h6>
+                                <p class="mb-0">{{ enrollment.created_at.strftime('%d %B, %Y') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <h6 class="fw-bold">Why Student Wants to Learn</h6>
+                                <p class="mb-0">{{ enrollment.why_learn|nl2br }}</p>
+                            </div>
+                            
+                            {% if enrollment.id_photo_path %}
+                            <div class="mb-3">
+                                <h6 class="fw-bold">Student ID/Photo</h6>
+                                <div class="mt-2">
+                                    <img src="{{ url_for('static', filename='uploads/' + enrollment.id_photo_path) }}" 
+                                         alt="Student ID" class="img-fluid border rounded" style="max-height: 300px;">
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

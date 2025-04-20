@@ -126,7 +126,7 @@ def add_course():
         flash('Course added successfully!', 'success')
         return redirect(url_for('admin_dashboard'))
     
-    return render_template('admin_dashboard.html', form=form, action='add_course')
+    return render_template('add_course.html', form=form)
 
 # Edit course
 @app.route('/admin/course/edit/<int:course_id>', methods=['GET', 'POST'])
@@ -142,7 +142,7 @@ def edit_course(course_id):
         flash('Course updated successfully!', 'success')
         return redirect(url_for('admin_dashboard'))
     
-    return render_template('admin_dashboard.html', form=form, course=course, action='edit_course')
+    return render_template('edit_course.html', form=form, course=course)
 
 # Delete course
 @app.route('/admin/course/delete/<int:course_id>', methods=['POST'])
@@ -180,7 +180,7 @@ def filter_enrollments(course_id):
 @login_required
 def enrollment_detail(enrollment_id):
     enrollment = Enrollment.query.get_or_404(enrollment_id)
-    return render_template('admin_dashboard.html', enrollment=enrollment, action='view_enrollment')
+    return render_template('enrollment_detail.html', enrollment=enrollment)
 
 # Error handlers
 @app.errorhandler(404)
