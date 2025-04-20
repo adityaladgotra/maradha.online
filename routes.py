@@ -424,7 +424,7 @@ def toggle_top_student_listing(student_id):
 @login_required
 def delete_top_student(student_id):
     if not isinstance(current_user, Admin):
-        return redirect(url_for('home'))
+        abort(403)  # Return forbidden status if not admin
 
     top_student = TopStudent.query.get_or_404(student_id)
 

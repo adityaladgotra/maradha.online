@@ -193,9 +193,6 @@
                         <h5 class="card-title mb-1">{{ student.student_name }}</h5>
                         <p class="text-muted mb-3">{{ student.course_name }}</p>
                         <div class="badge bg-primary">Rank #{{ student.rank }}</div>
-                        {% if current_user.is_authenticated and current_user.__class__.__name__ == 'Admin' %}
-                            </div>
-                        {% endif %}
                     </div>
                 </div>
             </div>
