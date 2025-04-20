@@ -81,8 +81,7 @@ class Enrollment(db.Model):
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
     # Foreign key to Student (optional, as not all enrollments will have a student account)
     student_id = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=True)
-    
-    # Timestamp
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 
 class TopStudent(db.Model):
