@@ -21,6 +21,13 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET", "dev-secret-key-change-in-production")
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
+# Add template filters
+@app.template_filter('nl2br')
+def nl2br_filter(s):
+    if s:
+        return s.replace('\n', '<br>')
+    return ''
+
 # Configure database
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", "sqlite:///maradha.db")
 app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {

@@ -51,7 +51,7 @@
             <div class="course-section mb-5">
                 <h3 class="section-title fw-bold mb-3">Course Description</h3>
                 <div class="course-description">
-                    <p>{{ course.description | nl2br }}</p>
+                    <p>{{ course.description | nl2br | safe }}</p>
                 </div>
             </div>
             

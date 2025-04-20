@@ -413,6 +413,7 @@
                                   action="{{ url_for('add_course') }}"
                                   {% endif %}
                                   novalidate>
+                                {% if form %}
                                 {{ form.hidden_tag() }}
                                 
                                 <div class="row g-3">
@@ -520,6 +521,12 @@
                                             <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">Cancel</a>
                                         {% endif %}
                                     </div>
+                                </div>
+                                {% else %}
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i> Please use the "Add New Course" button to add a course.
+                                </div>
+                                {% endif %}
                                 </div>
                             </form>
                         </div>
