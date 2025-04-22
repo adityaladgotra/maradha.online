@@ -26,6 +26,7 @@ class Student(UserMixin, db.Model):
     full_name = db.Column(db.String(100), nullable=False)
     phone_number = db.Column(db.String(20), nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)
+     notifications_enabled = db.Column(db.Boolean, default=True, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     enrollments = db.relationship('Enrollment', backref='student', lazy=True)
