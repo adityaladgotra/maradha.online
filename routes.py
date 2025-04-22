@@ -31,6 +31,11 @@ def enrollment_form(course_id):
     form = EnrollmentForm()
 
     if form.validate_on_submit():
+        # Check if user is logged in
+        if not current_user.is_authenticated:
+            flash('Please log in to enroll in courses.', 'warning')
+            return redirect(url_for('login', next=request.url))
+
         # Handle file upload if provided
         id_photo_path = None
         if form.id_photo.data:
@@ -41,6 +46,7 @@ def enrollment_form(course_id):
 
         # Create enrollment
         enrollment = Enrollment(
+            student_id=current_user.id, # Link the current student for Getting Course of taken by Student.
             full_name=form.full_name.data,
             father_name=form.father_name.data,
             mother_name=form.mother_name.data,
@@ -257,11 +263,24 @@ def student_dashboard():
     if not isinstance(current_user, Student):
         return redirect(url_for('admin_dashboard'))
 
-    enrolled_courses = [enrollment.course for enrollment in current_user.enrollments]
+    enrolled_courses = current_user.enrollments
     notifications = Notification.query.filter_by(student_id=current_user.id).order_by(Notification.created_at.desc()).all()
 
     return render_template('student_dashboard.html', enrolled_courses=enrolled_courses, notifications=notifications)
 
+@app.route('/notifications/toggle', methods=['POST'])
+@login_required
+def toggle_notifications():
+    if not isinstance(current_user, Student):
+        return jsonify({'success': False}), 403
+        
+    current_user.notifications_enabled = not current_user.notifications_enabled
+    db.session.commit()
+    
+    return jsonify({
+        'success': True,
+        'enabled': current_user.notifications_enabled
+    })
 # Mark notification as read
 @app.route('/notification/<int:notification_id>/read', methods=['POST'])
 @login_required
