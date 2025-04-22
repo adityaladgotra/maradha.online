@@ -32,9 +32,16 @@
                 <div class="card-header bg-light py-3">
                     <div class="d-flex justify-content-between align-items-center">
                         <h5 class="mb-0"><i class="fas fa-bell me-2"></i> Notifications</h5>
-                        {% if notifications %}
-                            <span class="badge bg-primary">{{ notifications|selectattr('is_read', 'equalto', false)|list|length }}</span>
-                        {% endif %}
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="notificationToggle" 
+                                       {% if current_user.notifications_enabled %}checked{% endif %}>
+                                <label class="form-check-label small" for="notificationToggle">Enable</label>
+                            </div>
+                            {% if notifications %}
+                                <span class="badge bg-primary">{{ notifications|selectattr('is_read', 'equalto', false)|list|length }}</span>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
                 <div class="card-body p-0">
@@ -80,11 +87,12 @@
                 <div class="card-body">
                     {% if enrolled_courses %}
                         <div class="row row-cols-1 row-cols-md-2 g-4">
-                            {% for course in enrolled_courses %}
+                            {% for enrollment in enrolled_courses %}
                                 <div class="col">
                                     <div class="card h-100 shadow-sm">
                                         <div class="card-body">
-                                            <h5 class="card-title">{{ course.title }}</h5>
+                                            <h5 class="card-title">{{ enrollment.course.title }}</h5>
+                                            <p class="card-text text-muted small">Applied on: {{ enrollment.created_at.strftime('%d %b, %Y') }}</p>
                                             <p class="card-text text-muted">
                                                 <i class="fas fa-calendar-alt me-1"></i>
                                                 {{ course.start_date.strftime('%d %b') }} - {{ course.end_date.strftime('%d %b, %Y') }}
@@ -115,6 +123,30 @@
 {% block extra_js %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Handle notification toggle
+        const notificationToggle = document.getElementById('notificationToggle');
+        if (notificationToggle) {
+            notificationToggle.addEventListener('change', function() {
+                fetch('/notifications/toggle', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.success) {
+                        // Revert toggle if failed
+                        notificationToggle.checked = !notificationToggle.checked;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    notificationToggle.checked = !notificationToggle.checked;
+                });
+            });
+        }
+   
         // Handle mark as read buttons
         const markReadButtons = document.querySelectorAll('.mark-read');
         
