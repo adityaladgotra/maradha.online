@@ -72,7 +72,6 @@ with app.app_context():
     import routes  # noqa: F401
     
     # Recreate all database tables
-    db.drop_all()
     db.create_all()
     
     # Create admin account if it doesn't exist
