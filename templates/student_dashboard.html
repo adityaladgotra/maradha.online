@@ -95,10 +95,10 @@
                                             <p class="card-text text-muted small">Applied on: {{ enrollment.created_at.strftime('%d %b, %Y') }}</p>
                                             <p class="card-text text-muted">
                                                 <i class="fas fa-calendar-alt me-1"></i>
-                                                {{ course.start_date.strftime('%d %b') }} - {{ course.end_date.strftime('%d %b, %Y') }}
+                                               {{ enrollment.course.start_date.strftime('%d %b') }} - {{ enrollment.course.end_date.strftime('%d %b, %Y') }}
                                             </p>
                                             <div class="d-flex mt-3">
-                                                <a href="{{ url_for('course_detail', course_id=course.id) }}" class="btn btn-primary">View Course</a>
+                                                <a href="{{ url_for('course_detail', course_id=enrollment.course.id) }}" class="btn btn-primary">View Course</a>
                                             </div>
                                         </div>
                                     </div>
