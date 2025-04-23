@@ -26,16 +26,10 @@ def course_detail(course_id):
 
 # Enrollment form submission
 @app.route('/enroll/<int:course_id>', methods=['GET', 'POST'])
+@login_required
 def enrollment_form(course_id):
     course = Course.query.get_or_404(course_id)
     form = EnrollmentForm()
-
-    if form.validate_on_submit():
-        # Check if user is logged in
-        if not current_user.is_authenticated:
-            flash('Please log in to enroll in courses.', 'warning')
-            return redirect(url_for('login', next=request.url))
-
         # Handle file upload if provided
         id_photo_path = None
         if form.id_photo.data:
