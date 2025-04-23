@@ -30,6 +30,8 @@ def course_detail(course_id):
 def enrollment_form(course_id):
     course = Course.query.get_or_404(course_id)
     form = EnrollmentForm()
+    
+    if form.validate_on_submit():
         # Handle file upload if provided
         id_photo_path = None
         if form.id_photo.data:
