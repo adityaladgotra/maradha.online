@@ -4,11 +4,16 @@ from datetime import datetime
 from flask import render_template, redirect, url_for, flash, request, jsonify, abort
 from werkzeug.security import check_password_hash
 from werkzeug.utils import secure_filename
-from flask_login import login_user, logout_user, login_required, current_user
+from flask_login import login_user, logout_user, login_required, current_user, LoginManager
 
 from app import app, db
 from models import Admin, Student, Course, Enrollment, Notification, TopStudent
 from forms import AdminLoginForm, StudentLoginForm, StudentRegistrationForm, CourseForm, EnrollmentForm, AdminStudentUploadForm
+
+# Initialize LoginManager
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
 
 # Home page
 @app.route('/')
