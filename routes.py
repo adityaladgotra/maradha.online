@@ -4,16 +4,12 @@ from datetime import datetime
 from flask import render_template, redirect, url_for, flash, request, jsonify, abort
 from werkzeug.security import check_password_hash
 from werkzeug.utils import secure_filename
-from flask_login import login_user, logout_user, login_required, current_user, LoginManager
+from flask_login import login_user, logout_user, login_required, current_user
 
 from app import app, db
 from models import Admin, Student, Course, Enrollment, Notification, TopStudent
 from forms import AdminLoginForm, StudentLoginForm, StudentRegistrationForm, CourseForm, EnrollmentForm, AdminStudentUploadForm
 
-# Initialize LoginManager
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = 'login'
 
 # Home page
 @app.route('/')
@@ -27,21 +23,21 @@ def home():
 def course_detail(course_id):
     course = Course.query.get_or_404(course_id)
     form = EnrollmentForm()
-    return render_template('course_detail.html', course=course, form=form)
-
-# Enrollment form submission
-@app.route('/enroll/<int:course_id>', methods=['GET', 'POST'])
-@login_required
-def enrollment_form(course_id):
-    course = Course.query.get_or_404(course_id)
-    form = EnrollmentForm()
-
     if form.validate_on_submit():
         # Check if user is logged in
         if not current_user.is_authenticated:
             flash('Please log in to enroll in courses.', 'warning')
             return redirect(url_for('login', next=request.url))
 
+    return render_template('course_detail.html', course=course, form=form)
+
+# Enrollment form submission
+@app.route('/enroll/<int:course_id>', methods=['GET', 'POST'])
+def enrollment_form(course_id):
+    course = Course.query.get_or_404(course_id)
+    form = EnrollmentForm()
+
+    
         # Handle file upload if provided
         id_photo_path = None
         if form.id_photo.data:
