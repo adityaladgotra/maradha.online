@@ -1,30 +1,32 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Terms & Conditions - ADITYA LADGOTRA</title>
-</head>
-<body>
-  <h1>Terms & Conditions</h1>
-  <p><strong>Last updated on:</strong> 24-04-2025 22:54:41</p>
+{% extends 'base.html' %}
+{% block title %}Terms & Conditions - Maradha Institute{% endblock %}
 
-  <p>These Terms and Conditions, along with privacy policy or other terms (“Terms”) constitute a binding agreement by and between ADITYA LADGOTRA, (“Website Owner” or “we” or “us” or “our”) and you (“you” or “your”) and relate to your use of our website, goods or services (collectively, “Services”).</p>
-
-  <p>By using our website and availing the Services, you agree that you have read and accepted these Terms. We reserve the right to modify these Terms at any time. It is your responsibility to periodically review these Terms to stay informed of updates.</p>
-
-  <ul>
-    <li>You agree to provide true, accurate, and complete information.</li>
-    <li>We do not guarantee accuracy or reliability of content and services.</li>
-    <li>Your use is at your own risk and discretion.</li>
-    <li>All content is proprietary. No rights granted.</li>
-    <li>Unauthorized use may result in legal action.</li>
-    <li>Charges apply for services availed.</li>
-    <li>Do not use the site for unlawful activities.</li>
-    <li>External links are governed by their own policies.</li>
-    <li>Initiating a transaction binds you legally with us.</li>
-    <li>Refunds are applicable under service failure with specific timelines.</li>
-    <li>Force majeure events may affect our performance obligations.</li>
-    <li>Governing law is Indian law; jurisdiction is Badala, Jammu and Kashmir.</li>
-    <li>For concerns, use the contact details provided on our website.</li>
-  </ul>
-</body>
-</html>
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-header bg-primary text-white py-3 text-center">
+                    <h4 class="mb-0">Terms & Conditions</h4>
+                    <p class="mb-0 small">Last updated on 24-04-2025 22:54:41</p>
+                </div>
+                <div class="card-body p-4">
+                    <p>These Terms and Conditions, along with the privacy policy or other terms (“Terms”) constitute a binding agreement by and between <strong>ADITYA LADGOTRA</strong> (“Website Owner”) and you (“you” or “your”).</p>
+                    <ul>
+                        <li>By using our website and services, you agree to these Terms and our Privacy Policy.</li>
+                        <li>You must provide true and accurate information while registering or transacting.</li>
+                        <li>We do not guarantee the accuracy or completeness of any content.</li>
+                        <li>Usage is at your own discretion and risk.</li>
+                        <li>You agree not to use our website for illegal or forbidden purposes.</li>
+                        <li>All content is proprietary. Unauthorized use may lead to legal action.</li>
+                        <li>You may be eligible for a refund only under the policies stated.</li>
+                        <li>All disputes are subject to the jurisdiction of Badala, Jammu and Kashmir.</li>
+                        <li>Force majeure applies.</li>
+                    </ul>
+                    <p>Contact us for queries using the contact details provided on the <a href="{{ url_for('contact') }}">Contact Us</a> page.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
