@@ -99,7 +99,7 @@ def admin_logout():
 
 @app.route('/contact')
 def contact():
-    return redirect(url_for('contact'))
+    return render_template('contact.html')
 
 @app.route('/terms')
 def terms():
