@@ -103,11 +103,11 @@ def contact():
 
 @app.route('/terms')
 def terms():
-    return redirect(url_for('terms'))
+    return render_template('terms.html')
 
 @app.route('/refund')
 def refund():
-    return redirect(url_for('refund'))
+    return render_template('refund.html')
 
 # Admin dashboard
 @app.route('/admin/dashboard')
