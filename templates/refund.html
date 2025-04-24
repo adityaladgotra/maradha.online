@@ -1,21 +1,27 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Cancellation & Refund Policy - ADITYA LADGOTRA</title>
-</head>
-<body>
-  <h1>Cancellation & Refund Policy</h1>
-  <p><strong>Last updated on:</strong> 24-04-2025 22:55:06</p>
+{% extends 'base.html' %}
+{% block title %}Cancellation & Refund Policy - Maradha Institute{% endblock %}
 
-  <p>ADITYA LADGOTRA believes in helping its customers as far as possible, and has a liberal cancellation policy. Under this policy:</p>
-
-  <ul>
-    <li>Cancellations are considered only if requested immediately after order placement, and if not yet shipped.</li>
-    <li>No cancellations for perishable items. Refund/replacement possible if quality is not good.</li>
-    <li>For damaged or defective items, report within 7 days. Refund only after verification.</li>
-    <li>If the product differs from description or expectations, report within 7 days.</li>
-    <li>Warranty issues should be directed to manufacturers.</li>
-    <li>Approved refunds take 3–5 days to process.</li>
-  </ul>
-</body>
-</html>
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-header bg-primary text-white py-3 text-center">
+                    <h4 class="mb-0">Cancellation & Refund Policy</h4>
+                    <p class="mb-0 small">Last updated on 24-04-2025 22:55:06</p>
+                </div>
+                <div class="card-body p-4">
+                    <ul>
+                        <li>Cancellations are only accepted if requested immediately after placing the order.</li>
+                        <li>No cancellations for perishable items like flowers or eatables.</li>
+                        <li>Damaged/defective items must be reported within 7 days for refund or replacement.</li>
+                        <li>For warranty-based items, refer the issue to the manufacturer.</li>
+                        <li>If refund is approved, it will be processed within 3-5 business days.</li>
+                    </ul>
+                    <p>We aim to help our customers and encourage you to reach out to our support for assistance.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
