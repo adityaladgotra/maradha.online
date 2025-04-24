@@ -97,6 +97,18 @@ def admin_logout():
     flash('You have been logged out.', 'success')
     return redirect(url_for('home'))
 
+@app.route('/contact')
+def contact():
+    return redirect(url_for('contact'))
+
+@app.route('/terms')
+def terms():
+    return redirect(url_for('terms'))
+
+@app.route('/refund')
+def refund():
+    return redirect(url_for('refund'))
+
 # Admin dashboard
 @app.route('/admin/dashboard')
 @login_required
