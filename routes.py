@@ -26,7 +26,6 @@ def course_detail(course_id):
 
 # Enrollment form submission
 @app.route('/enroll/<int:course_id>', methods=['GET', 'POST'])
-@login_required
 def enrollment_form(course_id):
     course = Course.query.get_or_404(course_id)
     form = EnrollmentForm()
